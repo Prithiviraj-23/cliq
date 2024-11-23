@@ -4,6 +4,10 @@ import re
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return "Hello, Render!"
+
 def search_wikipedia(query, limit=10):
     url = "https://en.wikipedia.org/w/api.php"
     params = {
@@ -56,4 +60,4 @@ def search_wikipedia_endpoint():
     return jsonify({'results': results})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
