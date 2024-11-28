@@ -4,8 +4,8 @@ import re
 
 app = Flask(__name__)
 
-def search_wikipedia(query, limit=10):
-    url = "https://en.wikipedia.org/w/api.php"
+def search_wikipedia(query, language="en", limit=10):
+    url = f"https://{language}.wikipedia.org/w/api.php"
     params = {
         'action': 'query',
         'list': 'search',
@@ -29,21 +29,24 @@ def search_wikipedia(query, limit=10):
             results.append({
                 'title': title,
                 'snippet': cleaned_snippet,
-                'url': f"https://en.wikipedia.org/?curid={page_id}"
+                'url': f"https://{language}.wikipedia.org/?curid={page_id}"
             })
     
     return results
+
+
 
 @app.route('/search_wikipedia', methods=['GET'])
 def search_wikipedia_endpoint():
   
     query = request.args.get('query')
-    limit = request.args.get('limit', default=10, type=int)  
+    limit = request.args.get('limit', default=10, type=int)
+    language = request.args.get('ln', default="en",type=str)  
     
     if not query:
         return jsonify({'error': 'Missing "query" parameter'}), 400
     
-    results = search_wikipedia(query, limit)
+    results = search_wikipedia(query,language,limit)
     
     return jsonify({'results': results})
 
